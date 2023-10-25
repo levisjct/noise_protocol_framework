@@ -1,4 +1,4 @@
-library noise;
+library noise_protocol_framework;
 
 import 'dart:typed_data';
 
@@ -7,9 +7,9 @@ import 'package:pointycastle/export.dart';
 import 'package:elliptic/ecdh.dart' as ecdh;
 import 'package:elliptic/elliptic.dart' as elliptic;
 
-import 'package:noise/constants/noise_constants.dart';
-import 'package:noise/extensions/ext_on_byte_list.dart';
-import 'package:noise/crypto/key_derivation.dart';
+import 'package:noise_protocol_framework/constants/noise_constants.dart';
+import 'package:noise_protocol_framework/extensions/ext_on_byte_list.dart';
+import 'package:noise_protocol_framework/crypto/key_derivation.dart';
 
 part './protocols/knpsk0/handshake_state.dart';
 part './protocols/nkpsk0/handshake_state.dart';

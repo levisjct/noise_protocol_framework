@@ -1,6 +1,6 @@
-part of './noise.dart';
+part of 'noise_protocol_framework.dart';
 
-class CipherState /* extends ICipherState */ {
+class CipherState {
   Uint8List _key;
   Uint8List _nonce;
 

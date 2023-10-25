@@ -1,4 +1,4 @@
-part of './noise.dart';
+part of 'noise_protocol_framework.dart';
 
 class KeyPair {
   final Uint8List _publicKey;

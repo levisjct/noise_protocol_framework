@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 import 'dart:typed_data';
 
-import 'package:noise/extensions/ext_on_byte_list.dart';
+import 'package:noise_protocol_framework/extensions/ext_on_byte_list.dart';
 
 const int CIPHER_KEY_LENGTH = 32;
 
