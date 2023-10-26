@@ -12,7 +12,9 @@ class NoiseHash {
   }
 
   Uint8List hashProtocolName(Uint8List protocolName) {
-    if(protocolName.length <= CIPHER_KEY_LENGTH) return protocolName.padRight(CIPHER_KEY_LENGTH, 0);
+    if (protocolName.length <= CIPHER_KEY_LENGTH){
+      return protocolName.padRight(CIPHER_KEY_LENGTH, 0);
+    }
     return getHash(protocolName, Uint8List(0));
   }
 }

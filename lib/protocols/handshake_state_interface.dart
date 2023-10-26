@@ -19,23 +19,16 @@ abstract class IHandshakeState {
   IHandshakeState(this.curve);
 
   Uint8List _computeDHKey(Uint8List privateKey, Uint8List publicKey) {
-    return Uint8List.fromList(
-      ecdh.computeSecret(
+    return Uint8List.fromList(ecdh.computeSecret(
         elliptic.PrivateKey.fromBytes(curve, privateKey.toList()),
-        publicKey.isCompressed(curve) ? 
-          curve.compressedHexToPublicKey(publicKey.toHex()) : 
-          curve.hexToPublicKey(publicKey.toHex())
-      )
-    );
+        publicKey.isCompressed(curve)
+            ? curve.compressedHexToPublicKey(publicKey.toHex())
+            : curve.hexToPublicKey(publicKey.toHex())));
   }
 
-  static Uint8List uncompressPublicKey(Uint8List publicKey, elliptic.Curve curve) {
-    return bytesFromHex(
-      curve.publicKeyToHex(
-        curve.compressedHexToPublicKey(
-          publicKey.toHex()
-        )
-      )
-    );
+  static Uint8List uncompressPublicKey(
+      Uint8List publicKey, elliptic.Curve curve) {
+    return bytesFromHex(curve
+        .publicKeyToHex(curve.compressedHexToPublicKey(publicKey.toHex())));
   }
 }

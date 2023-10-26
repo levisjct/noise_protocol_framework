@@ -37,7 +37,7 @@ class CipherState {
   }
 
   Uint8List _encrypt(Uint8List ad, Uint8List plaintext, {Uint8List? n}) {
-    if(n != null) assert(n.length == 8);
+    if (n != null) assert(n.length == 8);
     Uint8List nonce = Uint8List(12);
     nonce.setRange(0, 4, [0, 0, 0, 0]);
     nonce.setAll(4, n ?? _nonce);
@@ -68,7 +68,8 @@ class CipherState {
   }
 
   Future<void> reKey() async {
-    _key = _encrypt(Uint8List(0), EMPTY_CIPHER_KEY_LENGTH_BYTES, n: MAX_UINT_64);
+    _key =
+        _encrypt(Uint8List(0), EMPTY_CIPHER_KEY_LENGTH_BYTES, n: MAX_UINT_64);
   }
 
   MessageBuffer writeMessageRegular(Uint8List payload) {

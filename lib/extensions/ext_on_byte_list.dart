@@ -19,11 +19,11 @@ extension Compare on Uint8List {
     return true;
   }
 
-  bool incrementBigEndian(){
+  bool incrementBigEndian() {
     bool flag = false;
     Uint8List copy = Uint8List.fromList(toList());
-    for(int i = length - 1; i >= 0; i--){
-      if(copy[i] == 255){
+    for (int i = length - 1; i >= 0; i--) {
+      if (copy[i] == 255) {
         copy[i] = 0;
       } else {
         copy[i]++;
@@ -35,11 +35,11 @@ extension Compare on Uint8List {
     return flag;
   }
 
-  bool incrementLittleEndian(){
+  bool incrementLittleEndian() {
     bool flag = false;
     Uint8List copy = Uint8List.fromList(toList());
-    for(int i = 0; i < length; i++){
-      if(copy[i] == 255){
+    for (int i = 0; i < length; i++) {
+      if (copy[i] == 255) {
         copy[i] = 0;
       } else {
         copy[i]++;
@@ -75,12 +75,12 @@ extension Compare on Uint8List {
 }
 
 extension ECPublicKey on Uint8List {
-  bool isCompressed(elliptic.Curve curve){
+  bool isCompressed(elliptic.Curve curve) {
     int compressedLength = ((curve.bitSize + 7) >> 3) + 1;
-    return length == compressedLength && [2,3].contains(this[0]);
+    return length == compressedLength && [2, 3].contains(this[0]);
   }
 
-  bool isUncompressed(elliptic.Curve curve){
+  bool isUncompressed(elliptic.Curve curve) {
     int compressedLength = ((curve.bitSize + 7) >> 3);
     return length == compressedLength * 2 + 1 && 4 == this[0];
   }
@@ -88,7 +88,7 @@ extension ECPublicKey on Uint8List {
 
 Uint8List bytesFromHex(String hexData, {bool pad = false}) {
   assert(hexData.length % 2 == 0, "hex data: $hexData = ${hexData.length}");
-  return pad ?
-    Uint8List.fromList(hex.decode(hexData)).padLeft(hexData.length ~/ 2, 0) :
-    Uint8List.fromList(hex.decode(hexData));
+  return pad
+      ? Uint8List.fromList(hex.decode(hexData)).padLeft(hexData.length ~/ 2, 0)
+      : Uint8List.fromList(hex.decode(hexData));
 }

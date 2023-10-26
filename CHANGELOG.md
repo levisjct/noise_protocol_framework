@@ -14,3 +14,7 @@
 ## 0.0.4
 
 * Add linter
+
+## 0.0.5
+
+* Format code

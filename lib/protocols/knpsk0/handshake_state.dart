@@ -7,21 +7,23 @@ class KNPSK0HandshakeState extends IHandshakeState {
   late KeyPair _e;
   late Uint8List _re;
 
-  final Uint8List _rs; 
+  final Uint8List _rs;
   final Uint8List _psk;
-  
+
   Uint8List? prologue;
 
-  KNPSK0HandshakeState(this._rs, this._psk, this._hash, elliptic.Curve curve, {this.prologue}) : super(curve);
+  KNPSK0HandshakeState(this._rs, this._psk, this._hash, elliptic.Curve curve,
+      {this.prologue})
+      : super(curve);
 
   @override
   void init(CipherState cipherState, String name) {
     _symmetricState = SymmetricState.initializeSymmetricState(
-      Uint8List.fromList(name.codeUnits), // e.g.: Noise_KNpsk0_P256_AESGCM_SHA256
-      _hash,
-      cipherState
-    );
-    if(prologue != null) {
+        Uint8List.fromList(
+            name.codeUnits), // e.g.: Noise_KNpsk0_P256_AESGCM_SHA256
+        _hash,
+        cipherState);
+    if (prologue != null) {
       _symmetricState.mixHash(prologue!);
     }
     _symmetricState.mixHash(_rs);
@@ -32,10 +34,10 @@ class KNPSK0HandshakeState extends IHandshakeState {
     await _symmetricState.mixKeyAndHash(_psk);
 
     _re = message.ne;
-    
+
     _symmetricState.mixHash(_re);
     await _symmetricState.mixKey(_re);
- 
+
     return _symmetricState.decryptAndHash(message.cipherText);
   }
 
@@ -56,12 +58,7 @@ class KNPSK0HandshakeState extends IHandshakeState {
     Uint8List ciphertext = _symmetricState.encryptAndHash(payload);
     MessageBuffer message = MessageBuffer(ne, Uint8List(0), ciphertext);
     List<CipherState> ciphers = await _symmetricState.split();
-    
-    return NoiseResponse(
-      message,
-      ciphers[0],
-      ciphers[1],
-      _symmetricState.h
-    );
+
+    return NoiseResponse(message, ciphers[0], ciphers[1], _symmetricState.h);
   }
 }
