@@ -18,3 +18,7 @@
 ## 0.0.5
 
 * Format code
+
+## 0.0.6
+
+* Format code - fix
