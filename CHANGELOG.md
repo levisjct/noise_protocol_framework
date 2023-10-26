@@ -9,4 +9,8 @@
 
 ## 0.0.3
 
-* remove unnecessary Futures
+* Remove unnecessary Futures
+
+## 0.0.4
+
+* Add linter

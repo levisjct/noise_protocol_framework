@@ -1,6 +1,6 @@
 name: noise_protocol_framework
 description: Pure dart library to easily implement Noise Protocol Framework protocols.
-version: 0.0.3
+version: 0.0.4
 repository: https://github.com/levisjct/noise
 topics:
   - noise
@@ -20,6 +20,7 @@ dependencies:
   pointycastle: ^3.7.3
 
 dev_dependencies:
+  lints: ^3.0.0
 
 
 # For information on the generic Dart part of this file, see the

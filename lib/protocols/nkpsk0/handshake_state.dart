@@ -37,7 +37,7 @@ class NKPSK0HandshakeState extends IHandshakeState {
     await _symmetricState.mixKey(_re);
     Uint8List dhsre = _computeDHKey(_s.privateKey, _re);
     await _symmetricState.mixKey(dhsre);
-    return await _symmetricState.decryptAndHash(message.cipherText);
+    return _symmetricState.decryptAndHash(message.cipherText);
   }
   
   @override
@@ -50,7 +50,7 @@ class NKPSK0HandshakeState extends IHandshakeState {
     Uint8List dhere = _computeDHKey(_e.privateKey, _re);
     await _symmetricState.mixKey(dhere);
     
-    Uint8List ciphertext = await _symmetricState.encryptAndHash(payload);
+    Uint8List ciphertext = _symmetricState.encryptAndHash(payload);
     MessageBuffer message = MessageBuffer(_e.publicKey, Uint8List(0), ciphertext);
 
     List<CipherState> ciphers = await _symmetricState.split();
