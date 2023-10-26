@@ -15,16 +15,16 @@ class KNPSK0HandshakeState extends IHandshakeState {
   KNPSK0HandshakeState(this._rs, this._psk, this._hash, elliptic.Curve curve, {this.prologue}) : super(curve);
 
   @override
-  Future<void> init(CipherState cipherState, String name) async {
-    _symmetricState = await SymmetricState.initializeSymmetricState(
+  void init(CipherState cipherState, String name) {
+    _symmetricState = SymmetricState.initializeSymmetricState(
       Uint8List.fromList(name.codeUnits), // e.g.: Noise_KNpsk0_P256_AESGCM_SHA256
       _hash,
       cipherState
     );
     if(prologue != null) {
-      await _symmetricState.mixHash(prologue!);
+      _symmetricState.mixHash(prologue!);
     }
-    await _symmetricState.mixHash(_rs);
+    _symmetricState.mixHash(_rs);
   }
 
   @override
@@ -33,18 +33,18 @@ class KNPSK0HandshakeState extends IHandshakeState {
 
     _re = message.ne;
     
-    await _symmetricState.mixHash(_re);
+    _symmetricState.mixHash(_re);
     await _symmetricState.mixKey(_re);
  
-    return await _symmetricState.decryptAndHash(message.cipherText);
+    return _symmetricState.decryptAndHash(message.cipherText);
   }
 
   @override
   Future<NoiseResponse> writeMessageResponder(Uint8List payload) async {
-    _e = await KeyPair.generate(curve);
+    _e = KeyPair.generate(curve);
     Uint8List ne = _e.publicKey;
 
-    await _symmetricState.mixHash(_e.publicKey);
+    _symmetricState.mixHash(_e.publicKey);
     await _symmetricState.mixKey(_e.publicKey);
 
     Uint8List dhre = _computeDHKey(_e.privateKey, _re);
@@ -53,7 +53,7 @@ class KNPSK0HandshakeState extends IHandshakeState {
     await _symmetricState.mixKey(dhre);
     await _symmetricState.mixKey(dhrs);
 
-    Uint8List ciphertext = await _symmetricState.encryptAndHash(payload);
+    Uint8List ciphertext = _symmetricState.encryptAndHash(payload);
     MessageBuffer message = MessageBuffer(ne, Uint8List(0), ciphertext);
     List<CipherState> ciphers = await _symmetricState.split();
     

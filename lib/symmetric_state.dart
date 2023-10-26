@@ -9,8 +9,8 @@ class SymmetricState {
 
   SymmetricState(this.cipherState, this.ck, this.h, this.hash);
 
-  static Future<SymmetricState> initializeSymmetricState(Uint8List protocolName, NoiseHash hash, CipherState cipherState) async {
-    Uint8List h = await hash.hashProtocolName(protocolName);
+  static SymmetricState initializeSymmetricState(Uint8List protocolName, NoiseHash hash, CipherState cipherState) {
+    Uint8List h = hash.hashProtocolName(protocolName);
     return SymmetricState(cipherState, h, Uint8List.fromList(h), hash);
   }
 
@@ -21,8 +21,8 @@ class SymmetricState {
     cipherState.key = ckTempk.sublist(CIPHER_KEY_LENGTH);
   }
 
-  Future<void> mixHash(Uint8List data) async {
-    h = await hash.getHash(h, data);
+  void mixHash(Uint8List data) {
+    h = hash.getHash(h, data);
   }
 
   Future<void> mixKeyAndHash(Uint8List inputKeyMaterial) async {
@@ -30,26 +30,26 @@ class SymmetricState {
     Uint8List ckTempHTempK = Uint8List.fromList(await derivator.deriveKey(CIPHER_KEY_LENGTH * 3, salt: ck));
 
     ck = ckTempHTempK.sublist(0, CIPHER_KEY_LENGTH);
-    await mixHash(ckTempHTempK.sublist(CIPHER_KEY_LENGTH, CIPHER_KEY_LENGTH * 2));
+    mixHash(ckTempHTempK.sublist(CIPHER_KEY_LENGTH, CIPHER_KEY_LENGTH * 2));
     cipherState.key = ckTempHTempK.sublist(CIPHER_KEY_LENGTH * 2);
   }
 
-  Future<Uint8List> encryptAndHash(Uint8List plaintext) async {
+  Uint8List encryptAndHash(Uint8List plaintext) {
     Uint8List ciphertext = plaintext;
     if(cipherState.hasKey) {
-      ciphertext = await cipherState.encryptWithAd(h, plaintext);
+      ciphertext = cipherState.encryptWithAd(h, plaintext);
     }
-    await mixHash(ciphertext);
+    mixHash(ciphertext);
     return ciphertext;
   }
 
-  Future<Uint8List> decryptAndHash(Uint8List ciphertext) async {
+  Uint8List decryptAndHash(Uint8List ciphertext) {
     Uint8List plaintext = ciphertext;
 
     if(cipherState.hasKey) {
-      plaintext = await cipherState.decryptWithAd(h, ciphertext);
+      plaintext = cipherState.decryptWithAd(h, ciphertext);
     }
-    await mixHash(ciphertext);
+    mixHash(ciphertext);
     return plaintext;
   }
 

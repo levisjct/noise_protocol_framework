@@ -27,16 +27,16 @@ class CipherState {
     nonce = Uint8List(8);
   }
 
-  Future<Uint8List> encryptWithAd(Uint8List ad, Uint8List plaintext) async {
+  Uint8List encryptWithAd(Uint8List ad, Uint8List plaintext) {
     if (_nonce.isEqual(MAX_UINT_64_MINUS_ONE)) {
       throw Exception("Nonce overflow");
     }
-    Uint8List res = await _encrypt(ad, plaintext);
+    Uint8List res = _encrypt(ad, plaintext);
     _nonce.incrementBigEndian();
     return res;
   }
 
-  Future<Uint8List> _encrypt(Uint8List ad, Uint8List plaintext, {Uint8List? n}) async {
+  Uint8List _encrypt(Uint8List ad, Uint8List plaintext, {Uint8List? n}) {
     if(n != null) assert(n.length == 8);
     Uint8List nonce = Uint8List(12);
     nonce.setRange(0, 4, [0, 0, 0, 0]);
@@ -48,16 +48,16 @@ class CipherState {
     return cipher.process(plaintext);
   }
 
-  Future<Uint8List> decryptWithAd(Uint8List ad, Uint8List ciphertext) async {
+  Uint8List decryptWithAd(Uint8List ad, Uint8List ciphertext) {
     if (_nonce.isEqual(MAX_UINT_64_MINUS_ONE)) {
       throw Exception("Nonce overflow");
     }
-    Uint8List res = await _decrypt(ad, ciphertext);
+    Uint8List res = _decrypt(ad, ciphertext);
     _nonce.incrementBigEndian();
     return res;
   }
 
-  Future<Uint8List> _decrypt(Uint8List ad, Uint8List ciphertext) async {
+  Uint8List _decrypt(Uint8List ad, Uint8List ciphertext) {
     Uint8List nonce = Uint8List(12);
     nonce.setRange(4, nonce.length, _nonce);
 
@@ -68,16 +68,16 @@ class CipherState {
   }
 
   Future<void> reKey() async {
-    _key = await _encrypt(Uint8List(0), EMPTY_CIPHER_KEY_LENGTH_BYTES, n: MAX_UINT_64);
+    _key = _encrypt(Uint8List(0), EMPTY_CIPHER_KEY_LENGTH_BYTES, n: MAX_UINT_64);
   }
 
-  Future<MessageBuffer> writeMessageRegular(Uint8List payload) async {
-    Uint8List cipherText = await encryptWithAd(Uint8List(0), payload);
+  MessageBuffer writeMessageRegular(Uint8List payload) {
+    Uint8List cipherText = encryptWithAd(Uint8List(0), payload);
     return MessageBuffer(Uint8List(0), Uint8List(0), cipherText);
   }
 
-  Future<Uint8List> readMessageRegular(MessageBuffer message) async {
-    return await decryptWithAd(Uint8List(0), message.cipherText);
+  Uint8List readMessageRegular(MessageBuffer message) {
+    return decryptWithAd(Uint8List(0), message.cipherText);
   }
 
   List<CipherState> split(Uint8List key1, Uint8List key2) {

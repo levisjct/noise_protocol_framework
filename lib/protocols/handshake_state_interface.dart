@@ -12,7 +12,7 @@ class NoiseResponse {
 abstract class IHandshakeState {
   Future<Uint8List> readMessageResponder(MessageBuffer message);
   Future<NoiseResponse> writeMessageResponder(Uint8List payload);
-  Future<void> init(CipherState cipherState, String name);
+  void init(CipherState cipherState, String name);
 
   final elliptic.Curve curve;
 

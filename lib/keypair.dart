@@ -22,7 +22,7 @@ class KeyPair {
   Uint8List get publicKey => Uint8List.fromList(_publicKey.toList());
   Uint8List get privateKey => Uint8List.fromList(_privateKey.toList());
 
-  static Future<KeyPair> generate(elliptic.Curve curve) async {
+  static KeyPair generate(elliptic.Curve curve) {
     elliptic.PrivateKey prk = curve.generatePrivateKey();
     return KeyPair._(
       bytesFromHex(curve.publicKeyToHex(prk.publicKey)),

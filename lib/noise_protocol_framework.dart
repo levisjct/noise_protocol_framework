@@ -52,8 +52,8 @@ class NoiseProtocolResponder {
     assert(psk.length == 32);
   }
 
-  Future<void> initialize(CipherState cipherState, String name) async {
-    await _handshakeState.init(cipherState, name);
+  void initialize(CipherState cipherState, String name) {
+    _handshakeState.init(cipherState, name);
   }
 
   Future<Uint8List> readMessage(MessageBuffer message) async {
@@ -61,7 +61,7 @@ class NoiseProtocolResponder {
     if(_messageCounter == 0){
       res = await _handshakeState.readMessageResponder(message);
     } else {
-      res = await _cipher1.readMessageRegular(message);
+      res = _cipher1.readMessageRegular(message);
     }
     _messageCounter++;
     return res;
@@ -76,7 +76,7 @@ class NoiseProtocolResponder {
       
       res = writeResponse.message;
     } else {
-      res = await _cipher2.writeMessageRegular(payload);
+      res = _cipher2.writeMessageRegular(payload);
     }
     _messageCounter++;
     return res;
