@@ -24,9 +24,13 @@
 * Format code - fix
 
 ## 0.0.7
-
+- **Breaking:** change `NoiseProtocolResponder` class from public API to `NoiseProtocol`
 * [add initiator logic](https://github.com/levisjct/noise_protocol_framework/issues/2)
 
 ## 0.0.8
 
 * [add docs and example](https://github.com/levisjct/noise_protocol_framework/issues/4)
+
+## 1.0.0
+
+* **first full functional release**
