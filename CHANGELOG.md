@@ -26,3 +26,7 @@
 ## 0.0.7
 
 * [add initiator logic](https://github.com/levisjct/noise_protocol_framework/issues/2)
+
+## 0.0.8
+
+* [add docs and example](https://github.com/levisjct/noise_protocol_framework/issues/4)
