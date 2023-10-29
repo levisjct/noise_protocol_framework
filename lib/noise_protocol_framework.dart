@@ -21,7 +21,7 @@ part './cipher_state.dart';
 part './message_buffer.dart';
 part './symmetric_state.dart';
 
-class NoiseProtocolResponder {
+class NoiseProtocol {
   int _messageCounter;
   final IHandshakeState _handshakeState;
 
@@ -31,24 +31,42 @@ class NoiseProtocolResponder {
   CipherState get cipher1 => _cipher1;
   CipherState get cipher2 => _cipher2;
 
-  NoiseProtocolResponder.custom(this._handshakeState) : _messageCounter = 0;
+  NoiseProtocol.custom(this._handshakeState) : _messageCounter = 0;
 
-  NoiseProtocolResponder.getKNPSK0(
+  NoiseProtocol.getKNPSK0Responder(
       Uint8List rs, Uint8List psk, NoiseHash hash, elliptic.Curve curve,
       {Uint8List? prologue})
       : _messageCounter = 0,
-        _handshakeState = KNPSK0HandshakeState(
+        _handshakeState = KNPSK0HandshakeState.responder(
             IHandshakeState.uncompressPublicKey(rs, curve), psk, hash, curve,
             prologue: prologue) {
     assert(psk.length == 32);
   }
 
-  NoiseProtocolResponder.getNKPSK0(
+  NoiseProtocol.getKNPSK0Initiator(
       KeyPair s, Uint8List psk, NoiseHash hash, elliptic.Curve curve,
       {Uint8List? prologue})
       : _messageCounter = 0,
-        _handshakeState =
-            NKPSK0HandshakeState(s, psk, hash, curve, prologue: prologue) {
+        _handshakeState = KNPSK0HandshakeState.initiator(s, psk, hash, curve,
+            prologue: prologue) {
+    assert(psk.length == 32);
+  }
+
+  NoiseProtocol.getNKPSK0Responder(
+      KeyPair s, Uint8List psk, NoiseHash hash, elliptic.Curve curve,
+      {Uint8List? prologue})
+      : _messageCounter = 0,
+        _handshakeState = NKPSK0HandshakeState.responder(s, psk, hash, curve,
+            prologue: prologue) {
+    assert(psk.length == 32);
+  }
+
+  NoiseProtocol.getNKPSK0Initiator(
+      Uint8List rs, Uint8List psk, NoiseHash hash, elliptic.Curve curve,
+      {Uint8List? prologue})
+      : _messageCounter = 0,
+        _handshakeState = NKPSK0HandshakeState.initiator(rs, psk, hash, curve,
+            prologue: prologue) {
     assert(psk.length == 32);
   }
 
@@ -58,8 +76,16 @@ class NoiseProtocolResponder {
 
   Future<Uint8List> readMessage(MessageBuffer message) async {
     Uint8List res;
-    if (_messageCounter == 0) {
+    if (_messageCounter == 0 && !_handshakeState._isInitiator) {
       res = await _handshakeState.readMessageResponder(message);
+    } else if (_messageCounter == 1 && _handshakeState._isInitiator) {
+      NoiseResponse noiseRes =
+          await _handshakeState.readMessageInitiator(message);
+      _cipher1 = noiseRes.cipher1;
+      _cipher2 = noiseRes.cipher2;
+      res = noiseRes.message.cipherText;
+    } else if (_messageCounter <= 1) {
+      throw Exception("Invalid message counter");
     } else {
       res = _cipher1.readMessageRegular(message);
     }
@@ -69,13 +95,17 @@ class NoiseProtocolResponder {
 
   Future<MessageBuffer> sendMessage(Uint8List payload) async {
     MessageBuffer res;
-    if (_messageCounter == 1) {
+    if (_messageCounter == 1 && !_handshakeState._isInitiator) {
       NoiseResponse writeResponse =
           await _handshakeState.writeMessageResponder(payload);
       _cipher1 = writeResponse.cipher1;
       _cipher2 = writeResponse.cipher2;
 
       res = writeResponse.message;
+    } else if (_messageCounter == 0 && _handshakeState._isInitiator) {
+      res = await _handshakeState.writeMessageInitiator(payload);
+    } else if (_messageCounter <= 1) {
+      throw Exception("Invalid message counter");
     } else {
       res = _cipher2.writeMessageRegular(payload);
     }

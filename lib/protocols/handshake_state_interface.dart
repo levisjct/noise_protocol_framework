@@ -12,11 +12,13 @@ class NoiseResponse {
 abstract class IHandshakeState {
   Future<Uint8List> readMessageResponder(MessageBuffer message);
   Future<NoiseResponse> writeMessageResponder(Uint8List payload);
+  Future<NoiseResponse> readMessageInitiator(MessageBuffer message);
+  Future<MessageBuffer> writeMessageInitiator(Uint8List payload);
   void init(CipherState cipherState, String name);
 
   final elliptic.Curve curve;
-
-  IHandshakeState(this.curve);
+  final bool _isInitiator;
+  IHandshakeState(this.curve, this._isInitiator);
 
   Uint8List _computeDHKey(Uint8List privateKey, Uint8List publicKey) {
     return Uint8List.fromList(ecdh.computeSecret(

@@ -22,3 +22,7 @@
 ## 0.0.6
 
 * Format code - fix
+
+## 0.0.7
+
+* [add initiator logic](https://github.com/levisjct/noise_protocol_framework/issues/2)
