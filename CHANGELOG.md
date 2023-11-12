@@ -38,3 +38,7 @@
 ## 1.0.1
 
 * fix readme and enhance example code
+
+## 1.0.2
+
+* fix format

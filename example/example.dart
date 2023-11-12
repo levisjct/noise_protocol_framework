@@ -49,20 +49,16 @@ Future<void> nkpsk0(Curve curve, Uint8List psk, String name) async {
   // Initialize the handshake state for the initiator
   KeyPair responderStatic = KeyPair.generate(curve);
   NoiseProtocol initiator = NoiseProtocol.getNKPSK0Initiator(
-      bytesFromHex(responderStatic.publicKey.toHex()), 
-      psk, 
-      NoiseHash(sha256), 
-      curve
-    );
+      bytesFromHex(responderStatic.publicKey.toHex()),
+      psk,
+      NoiseHash(sha256),
+      curve);
   initiator.initialize(
       CipherState.empty(GCMBlockCipher(BlockCipher("AES"))), name);
 
   // Initialize the handshake state for the responder
   NoiseProtocol responder = NoiseProtocol.getNKPSK0Responder(
-      responderStatic,
-      psk,
-      NoiseHash(sha256),
-      curve);
+      responderStatic, psk, NoiseHash(sha256), curve);
   responder.initialize(
       CipherState.empty(GCMBlockCipher(BlockCipher("AES"))), name);
 
