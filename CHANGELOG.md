@@ -42,3 +42,7 @@
 ## 1.0.2
 
 * fix format
+
+## 1.0.3
+
+* bump dependencies
