@@ -21,7 +21,7 @@ To use `noise_protocol_framework`, add it to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  noise_protocol_framework: ^1.0.1
+  noise_protocol_framework: ^1.0.3
 ```
 
 Then, import the library:
