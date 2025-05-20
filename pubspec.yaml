@@ -17,10 +17,10 @@ dependencies:
   convert: ^3.1.1
   elliptic: ^0.3.10
   cryptography: ^2.5.0
-  pointycastle: ^3.7.3
+  pointycastle: ^4.0.0
 
 dev_dependencies:
-  lints: ^3.0.0
+  lints: ^5.1.1
 
 
 # For information on the generic Dart part of this file, see the
